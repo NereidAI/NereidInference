@@ -8,7 +8,7 @@ go 1.27.3
 require (
 	github.com/edgexfoundry/device-sdk-go/v4 v4.0.2
 	github.com/edgexfoundry/go-mod-core-contracts/v4 v4.0.3
-	github.com/fsnotify/fsnotify v1.9.0
+	github.com/fsnotify/fsnotify v1.10.1
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b
 	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.11
