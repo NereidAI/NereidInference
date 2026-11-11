@@ -1,0 +1,50 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: nereid-inference-detection
+manufacturer: YIQISOFT
+model: InferenceDetection
+labels:
+  - nereid
+  - inference
+  - detection
+description: Generic descriptor-driven object detection inference job
+deviceResources:
+  - name: DetectionJSON
+    description: Bounded JSON document of normalized detections (nereid.detection/1)
+    properties:
+      valueType: String
+      readWrite: "R"
+  - name: DetectionCount
+    description: Number of detections in the last result
+    properties:
+      valueType: Int32
+      readWrite: "R"
+  - name: Top1Label
+    description: Highest-scoring label of the last result
+    properties:
+      valueType: String
+      readWrite: "R"
+  - name: Top1Score
+    description: Highest score of the last result
+    properties:
+      valueType: Float64
+      readWrite: "R"
+  - name: FrameJPEG
+    description: Optional annotated evidence frame emitted when EmitFrame is true
+    properties:
+      valueType: Binary
+      readWrite: "R"
+      mediaType: image/jpeg
+  - {name: InferLatencyMs, description: Last inference round-trip time in milliseconds, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: State, description: Pipeline state (APPLIED/DEGRADED/FAILED), properties: {valueType: String, readWrite: "R"}}
+  - {name: LastError, description: Most recent transport-safe failure reason, properties: {valueType: String, readWrite: "R"}}
+  - {name: SuccessTotal, description: Cumulative successful inferences, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: ErrorTotal, description: Cumulative failed inference attempts, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: P50Ms, description: Median recent inference latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: P95Ms, description: 95th percentile recent inference latency, properties: {valueType: Float64, readWrite: "R"}}
+  - name: Trigger
+    description: Write to invoke one immediate inference, optionally with a prompt
+    properties:
+      valueType: String
+      readWrite: "W"

@@ -1,0 +1,109 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Fork-safe validation: image archives are artifacts, never registry pushes.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.15.0
+          args: --config .golangci.yml
+
+      - name: Run the repository test gate
+        run: make test
+
+  image:
+    name: Package multi-arch image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Prepare the OCI image build
+        id: image
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Branch/PR builds always use the rolling dev channel; the tag-only
+          # release workflow derives bare SemVer from the git tag itself.
+          version="0.0.0-dev"
+          archive="dist/nereidinference-${version}.oci.tar"
+          mkdir -p dist
+          rm -f "${archive}"
+          {
+            echo "archive=${archive}"
+            echo "build_date=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "tags<<EOF"
+            echo "ghcr.io/nereidai/nereidinference:${version}"
+            echo "ghcr.io/nereidai/nereidinference:${version}-$(date -u +%Y%m%d-%H%M)"
+            echo "ghcr.io/nereidai/nereidinference:${version}-${GITHUB_SHA::7}"
+            echo "EOF"
+          } >> "${GITHUB_OUTPUT}"
+
+      - name: Build and cache the OCI image archive
+        # The action provides the GitHub runtime integration required by the
+        # gha cache backend, which a plain shell buildx invocation does not.
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: false
+          outputs: type=oci,dest=${{ steps.image.outputs.archive }}
+          # Same dev-channel build argument as publish-dev.yml, so the cache
+          # keys line up; release runs inject bare SemVer via the tag workflow.
+          build-args: |
+            VERSION=0.0.0-dev
+            GIT_SHA=${{ github.sha }}
+            BUILD_DATE=${{ steps.image.outputs.build_date }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+          sbom: false
+          tags: ${{ steps.image.outputs.tags }}
+
+      - name: Verify the OCI image archive
+        run: ./bin/test-oci-image.sh "${{ steps.image.outputs.archive }}" linux/amd64,linux/arm64
+
+      - name: Upload the multi-arch image
+        uses: actions/upload-artifact@v4
+        with:
+          name: nereidinference-${{ github.sha }}
+          path: dist/*.oci.tar
+          if-no-files-found: error
+          retention-days: 14

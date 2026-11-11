@@ -1,0 +1,175 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+#
+# Developer compose for device-inference.
+#
+# The EdgeX core stack itself is provided by the official edgex-compose
+# project (Odesa 4.0). Bring it up first so the external network exists:
+#   docker network create edgex_edgex-network 2>/dev/null || true
+#   (see https://github.com/edgexfoundry/edgex-compose for the core services)
+#
+# This file adds the inference service and (commented) local model server /
+# streaming companions. Production deployment uses Open Horizon service
+# definitions, not this file.
+
+services:
+  device-inference:
+    image: ghcr.io/nereidai/nereidinference:0.0.0-dev
+    build:
+      context: .
+      # Dev channel default; the Dockerfile ARG carries the same fallback.
+      args:
+        VERSION: 0.0.0-dev
+    # Developer startup must not silently reuse a stale image: plain
+    # `docker compose up` builds from this working tree before starting NI.
+    pull_policy: build
+    container_name: edgex-device-inference
+    hostname: edgex-device-inference
+    networks:
+      - edgex-network
+    ports:
+      - "59992:59992"
+      - "28080:18080"
+    volumes:
+      - ./cmd/res:/res:ro
+      - model-root:/var/lib/nereid-inference/models
+      - ovms-runtime:/var/lib/nereid-inference/models/runtime
+      - inference-inbox:/var/lib/nereid-inference/inbox
+      # Development host access to the native anax ESS object directory.
+      # Keep the in-container path identical to Inference.Ess.LocalDir.
+      - /var/horizon/ess-store/sync/local:/var/horizon/ess-store/sync/local:ro
+    environment:
+      EDGEX_SECURITY_SECRET_STORE: "false"
+      # Keep Keeper as the source of truth after first bootstrap. Overwrite mode
+      # reloads the local Writable map on every restart and drops runtime-injected
+      # InsecureSecrets from the service's in-memory secret provider.
+      REGISTRY_HOST: edgex-core-keeper
+      SERVICE_HOST: edgex-device-inference
+    # OH runs the container as root to read ess-store objects; the ffmpeg
+    # child processes drop privileges to UID 1000. Dev compose stays rootless.
+    # user: "1000:1000"
+    # VA-API decode (Inference.DecodeAccel=vaapi) needs DRM render nodes.
+    # Map the whole directory so a per-job Inference.VAAPIDevice can select
+    # either the integrated GPU (renderD128) or a discrete Arc card
+    # (renderD129/renderD130 on this host). The ffmpeg child runs as root
+    # here, drops to UID 1000 and is granted the selected node's owning GID
+    # by the service at runtime, so no group_add is needed (group names do
+    # not exist in the Alpine image). When the container runs as a static
+    # non-root user instead (the commented "user" line below), add the
+    # host's NUMERIC render/video GIDs, e.g. group_add: ["990", "44"] on
+    # Ubuntu; GIDs are site-specific. Kubernetes pods request the GPU via
+    # the Intel device plugin (resources.limits: gpu.intel.com/i915).
+    devices:
+      - /dev/dri:/dev/dri
+    restart: unless-stopped
+
+  # The EdgeX core stack (core-keeper etc.) is brought up separately from
+  # edgex-compose on the shared edgex_edgex-network; do not duplicate it here.
+
+  edgex-ovms-init:
+    image: openvino/model_server:2026.2.1-gpu
+    # The OVMS image defaults to the unprivileged "ovms" user, while a fresh
+    # named volume is root-owned. This one-shot only seeds the empty multi-model
+    # configuration; DS and OVMS then access the seeded path through mounts.
+    user: root
+    entrypoint: ["/bin/bash", "-o", "pipefail", "-c"]
+    command:
+      - |
+        set -euo pipefail
+        mkdir -p /runtime/ovms
+        if [ ! -s /runtime/ovms/config.json ]; then
+          printf '{"model_config_list":[]}\n' > /runtime/ovms/config.json
+        fi
+    volumes:
+      - ovms-runtime:/runtime
+    restart: "no"
+
+  # Reference KServe model server. NereidInference owns the mounted
+  # multi-model configuration and adds/removes one OVMS servable per active
+  # inference binding and target device.
+  edgex-ovms:
+    image: openvino/model_server:2026.2.1-gpu
+    # The model repository volume is owned by root in the development Docker
+    # setup. GPU validation needs host device access; privileged mode exposes
+    # the host device nodes (including /dev/dri) to OVMS.
+    user: root
+    privileged: true
+    container_name: edgex-ovms
+    hostname: edgex-ovms
+    networks:
+      - edgex-network
+    depends_on:
+      edgex-ovms-init:
+        condition: service_completed_successfully
+    command:
+      - --port=9000
+      - --rest_port=9001
+      - --config_path=/models/runtime/ovms/config.json
+      - --file_system_poll_wait_seconds=1
+    ports:
+      # Host port 9000 is already used by Portainer in the development host;
+      # expose OVMS KServe gRPC on 19000 while the in-network endpoint remains
+      # edgex-ovms:9000.
+      - "19000:9000"
+      # OVMS REST/HTTP API.
+      - "9001:9001"
+    volumes:
+      - model-root:/models:ro
+      - ovms-runtime:/models/runtime:ro
+    # devices:
+    #   - /dev/dri:/dev/dri
+    restart: unless-stopped
+
+  # Managed Triton inference server (family "triton"). The container itself
+  # is deployment material, exactly like OVMS above: Docker/OH owns its
+  # process lifecycle while NI owns model lifecycle inside it. NI renders
+  # /models/runtime/triton/repo/<servedName> and drives explicit
+  # model-control load/unload over HTTP :8000; jobs infer over gRPC :8001.
+  # Both volumes are shared with device-inference so the relative payload
+  # symlinks resolve identically in the two containers.
+  edgex-triton:
+    image: nvcr.io/nvidia/tritonserver:25.08-py3
+    container_name: edgex-triton
+    hostname: edgex-triton
+    networks:
+      - edgex-network
+    command:
+      - tritonserver
+      - --model-control-mode=explicit
+      - --model-repository=/models/runtime/triton/repo
+      - --http-port=8000
+      - --grpc-port=8001
+      - --metrics-port=8002
+      - --log-verbose=1
+    ports:
+      # Host ports avoid collisions with other local services; in-network
+      # endpoints remain edgex-triton:8000 (HTTP) and :8001 (gRPC).
+      - "18000:8000"
+      - "18001:8001"
+    volumes:
+      - model-root:/models:ro
+      - ovms-runtime:/models/runtime:ro
+    restart: unless-stopped
+
+  # Optional companion for browser WebRTC/HLS preview. The inference path
+  # never depends on go2rtc: its stream.mjpeg endpoint is simply one possible
+  # mpjpeg FrameSource URL.
+  # edge-go2rtc:
+  #   image: alexxit/go2rtc:latest
+  #   container_name: edgex-go2rtc
+  #   hostname: edgex-go2rtc
+  #   networks:
+  #     - edgex-network
+  #   ports:
+  #     - "127.0.0.1:1984:1984"
+  #   restart: unless-stopped
+
+networks:
+  edgex-network:
+    external: true
+    name: edgex_edgex-network
+
+volumes:
+  model-root:
+  ovms-runtime:
+  inference-inbox:

@@ -1,0 +1,21 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: nereid-inference-llm
+manufacturer: YIQISOFT
+model: InferenceLLM
+labels: [nereid, inference, llm, openai]
+description: Generic OpenAI-compatible chat, VLM and embeddings inference job
+deviceResources:
+  - {name: Text, description: Last generated chat or VLM text, properties: {valueType: String, readWrite: "R"}}
+  - {name: Confidence, description: Generic confidence point used by text decoders, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: VectorJSON, description: Bounded vector for OpenAI embedding tasks, properties: {valueType: String, readWrite: "R"}}
+  - {name: FrameJPEG, description: Optional annotated VLM evidence frame, properties: {valueType: Binary, readWrite: "R", mediaType: image/jpeg}}
+  - {name: InferLatencyMs, description: Last inference round-trip time in milliseconds, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: State, description: Pipeline state, properties: {valueType: String, readWrite: "R"}}
+  - {name: LastError, description: Most recent failure reason, properties: {valueType: String, readWrite: "R"}}
+  - {name: SuccessTotal, description: Cumulative successful inferences, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: ErrorTotal, description: Cumulative failed attempts, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: P50Ms, description: Median recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: P95Ms, description: P95 recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: Trigger, description: Write prompt text to invoke chat, VLM or embedding inference, properties: {valueType: String, readWrite: "W"}}

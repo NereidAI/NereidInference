@@ -1,0 +1,48 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+#
+# Sample A-channel NI-native pipeline definition for a face-recognition
+# companion application. This is importable deployment material, not a
+# platform default: the service starts with an empty pipeline registry
+# unless Pipelines.ProvisionFile points at a deployed copy of this file (or
+# an equivalent table is delivered through a PipelinesJSON PUT). NL
+# references only pipelineId on a job; it never generates this topology.
+# Models resolve from the local NF package catalog when a binding starts, so
+# this file contains no tensor names, server names, alignment constants or
+# model payload paths.
+pipelines:
+  - pipelineId: face-recognition-v1
+    version: 1.0.0
+    description: YuNet detection and five keypoints -> ROI five-point alignment -> per-face SFace 128-D embedding
+    nodes:
+      - id: source
+        kind: source
+      - id: detect
+        kind: infer
+        model:
+          modelId: yunet
+        inputs:
+          - from: frame
+      - id: align
+        kind: transform
+        operator: roi-align-crop
+        mode: five-point
+      - id: embed
+        kind: infer
+        model:
+          modelId: sface
+        inputs:
+          - from: crops
+      - id: emit
+        kind: emit
+    edges:
+      - [source, detect]
+      - [detect, align]
+      - [align, embed]
+      - [embed, emit]
+    limits:
+      # Keep the eight highest-scoring faces; lower-scoring overflow is
+      # dropped before SFace and counted in PipelineJSON.droppedObjects.
+      maxObjects: 8
+      # The service-wide Limits.JSONPayloadCap may lower this further.
+      maxEventBytes: 65536

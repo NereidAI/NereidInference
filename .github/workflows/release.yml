@@ -1,0 +1,42 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+# Tag-only image publication (root treaty §19). All mechanics live in the
+# organization reusable workflow: SemVer tag validation, bare VERSION
+# derivation (tag v0.0.1 -> VERSION 0.0.1), amd64+arm64 index, three-tag
+# scheme (no latest), GHCR login. The repository has no VERSION file and no
+# push target; the git tag is the single version source. Branch/PR CI never
+# publishes.
+name: Publish Images
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prep:
+    name: Derive image build metadata
+    runs-on: ubuntu-latest
+    outputs:
+      build_date: ${{ steps.meta.outputs.build_date }}
+    steps:
+      - id: meta
+        run: echo "build_date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+  publish:
+    name: Publish multi-arch image to GHCR
+    needs: prep
+    uses: NereidAI/.github/.github/workflows/release-image.yml@v1
+    with:
+      image-name: nereidinference
+      build-args: |
+        GIT_SHA=${{ github.sha }}
+        BUILD_DATE=${{ needs.prep.outputs.build_date }}

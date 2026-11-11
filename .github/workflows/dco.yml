@@ -1,0 +1,39 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+# Developer Certificate of Origin gate. Every non-merge commit in a pull
+# request must carry a Signed-off-by trailer matching its author, as created
+# by `git commit -s`. The check is self-contained (no third-party action).
+name: DCO
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  dco:
+    name: Signed-off-by check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Verify Signed-off-by trailers
+        run: |
+          set -u
+          git fetch origin "${{ github.base_ref }}"
+          base="$(git merge-base HEAD "origin/${{ github.base_ref }}")"
+          fail=0
+          for c in $(git rev-list --no-merges "${base}"..HEAD); do
+            author="$(git log -1 --format='%an <%ae>' "$c")"
+            if ! git log -1 --format='%B' "$c" | grep -qE "^Signed-off-by: $(printf '%s' "$author" | sed 's/[.[\*^$()+?{}|]/\\&/g')$"; then
+              echo "::error::Commit ${c} is missing a matching 'Signed-off-by: ${author}' trailer (use 'git commit -s')"
+              fail=1
+            fi
+          done
+          exit "${fail}"

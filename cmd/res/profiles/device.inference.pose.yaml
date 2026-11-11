@@ -1,0 +1,20 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: nereid-inference-pose
+manufacturer: YIQISOFT
+model: InferencePose
+labels: [nereid, inference, pose, keypoints]
+description: Generic keypoint and human-pose inference job
+deviceResources:
+  - {name: PersonCount, description: Number of detected persons, properties: {valueType: Int32, readWrite: "R"}}
+  - {name: KeypointsJSON, description: Bounded persons, boxes, scores and keypoints, properties: {valueType: String, readWrite: "R"}}
+  - {name: FrameJPEG, description: Optional annotated evidence frame, properties: {valueType: Binary, readWrite: "R", mediaType: image/jpeg}}
+  - {name: InferLatencyMs, description: Last inference round-trip time in milliseconds, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: State, description: Pipeline state, properties: {valueType: String, readWrite: "R"}}
+  - {name: LastError, description: Most recent failure reason, properties: {valueType: String, readWrite: "R"}}
+  - {name: SuccessTotal, description: Cumulative successful inferences, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: ErrorTotal, description: Cumulative failed attempts, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: P50Ms, description: Median recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: P95Ms, description: P95 recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: Trigger, description: Write to invoke immediate inference, properties: {valueType: String, readWrite: "W"}}

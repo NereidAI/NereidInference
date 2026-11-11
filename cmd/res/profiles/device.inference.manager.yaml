@@ -1,0 +1,32 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: nereid-inference-manager
+manufacturer: YIQISOFT
+model: InferenceManager
+labels:
+  - nereid
+  - inference
+  - manager
+description: Service-level model inventory and diagnostics for the generic inference device service
+deviceResources:
+  - name: ModelsJSON
+    description: Full replacement local model inventory, including runtime readiness and binding counts
+    properties:
+      valueType: String
+      readWrite: "R"
+  - name: ObjectDiagnosticsJSON
+    description: Recent distribution objects that were ignored or rejected, with attempt count and last reason
+    properties:
+      valueType: String
+      readWrite: "R"
+  - name: ExternalServablesJSON
+    description: Read-only merged provisioned/legacy-runtime health view of servers this service cannot administrate; managed PUT and ServableID execution are unsupported
+    properties:
+      valueType: String
+      readWrite: "R"
+  - name: PipelinesJSON
+    description: Atomic full replacement table of versioned NI-native minimal linear pipelines; accepted pipelineId+version definitions are immutable
+    properties:
+      valueType: String
+      readWrite: "RW"

@@ -1,0 +1,24 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+#
+# Local build acceleration (root treaty §17, §19.3).
+#
+# Copy this file to local.mk and fill in the endpoints for a restricted or
+# regional network:
+#
+#     cp local.mk.example local.mk
+#
+# local.mk is git-ignored and must never be committed. With direct internet
+# access, leave it absent: every value stays empty, reproducing the pristine
+# upstream build that CI runs. This file only populates build variables; the
+# Makefile contains no push action regardless of its contents.
+
+# Go module proxy URL (empty = toolchain default).
+GOPROXY ?=
+
+# Alpine apk mirror URL without a trailing slash (empty = upstream CDN).
+ALPINE_MIRROR ?=
+
+# Optional base-image overrides for a local mirror missing a specific tag.
+# BASE ?= golang:1.27.3-alpine3.24
+# RUNTIME_BASE ?= alpine:3.24.4

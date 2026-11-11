@@ -1,0 +1,11 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+deviceList:
+  - name: nereid-inference
+    profileName: nereid-inference-manager
+    description: Singleton NereidInference service manager exposing the local model inventory
+    labels: [nereid, inference, manager]
+    protocols:
+      Inference:
+        Manager: "true"

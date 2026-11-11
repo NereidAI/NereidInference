@@ -1,0 +1,19 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: nereid-inference-image
+manufacturer: YIQISOFT
+model: InferenceImage
+labels: [nereid, inference, image]
+description: Generic image-to-image tensor output job such as enhancement or super-resolution
+deviceResources:
+  - {name: ResultJPEG, description: Decoded model output image, properties: {valueType: Binary, readWrite: "R", mediaType: image/jpeg}}
+  - {name: FrameJPEG, description: Optional annotated input evidence frame, properties: {valueType: Binary, readWrite: "R", mediaType: image/jpeg}}
+  - {name: InferLatencyMs, description: Last inference round-trip time in milliseconds, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: State, description: Pipeline state, properties: {valueType: String, readWrite: "R"}}
+  - {name: LastError, description: Most recent failure reason, properties: {valueType: String, readWrite: "R"}}
+  - {name: SuccessTotal, description: Cumulative successful inferences, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: ErrorTotal, description: Cumulative failed attempts, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: P50Ms, description: Median recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: P95Ms, description: P95 recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: Trigger, description: Write to invoke immediate inference, properties: {valueType: String, readWrite: "W"}}

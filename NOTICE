@@ -1,0 +1,52 @@
+NereidInference
+Copyright (C) 2026 YIQISOFT
+
+NereidInference is based in part on contributions from other companies and
+open-source projects. This file records project-level attribution for
+third-party material directly adapted or generated in this repository.
+Third-party components retain their respective licenses. Exact-version Go
+module license and notice texts are maintained in Attribution.txt rather than
+duplicated here.
+
+EdgeX Foundry device-sdk-go
+---------------------------
+Source: https://github.com/edgexfoundry/device-sdk-go/tree/v4.0.2
+
+Portions of cmd/main.go are adapted from
+example/cmd/device-simple/main.go:
+
+  Copyright (C) 2017-2018 Canonical Ltd
+  Copyright (C) 2018-2019 IOTech Ltd
+
+Portions of Dockerfile are adapted from
+example/cmd/device-simple/Dockerfile:
+
+  Copyright (c) 2023 Intel
+  Copyright (c) 2024 IOTech Ltd
+
+Build rules in Makefile and the attribution-checking script in
+bin/test-attribution-txt.sh are also adapted from device-sdk-go.
+
+Kubeflow KServe
+---------------
+The generated protocol files in internal/infer/kserve/grpcv2 are derived from
+the KServe gRPC v2 inference protocol definition:
+
+  Copyright 2020 kubeflow.org.
+
+Additional Go module attributions are recorded in Attribution.txt. The
+copyright and license notices in the corresponding source files are retained.
+
+Upstream Project Acknowledgment
+-------------------------------
+EdgeX Foundry (https://www.edgexfoundry.io/ and
+https://github.com/edgexfoundry) is an open-source project licensed under
+Apache-2.0. NereidInference is an EdgeX device service based on
+device-sdk-go. It is an independent work, not part of, or endorsed by, EdgeX
+Foundry.
+
+Kubeflow KServe (https://github.com/kserve/kserve) is an open-source project
+licensed under Apache-2.0. NereidInference uses the KServe gRPC v2 inference
+protocol and includes generated protocol code derived from that project.
+NereidInference is an independent work, not part of, or endorsed by, Kubeflow
+KServe.

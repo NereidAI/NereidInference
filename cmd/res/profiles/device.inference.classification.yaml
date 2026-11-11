@@ -1,0 +1,22 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: nereid-inference-classification
+manufacturer: YIQISOFT
+model: InferenceClassification
+labels: [nereid, inference, classification]
+description: Generic single-label and multi-label image classification job
+deviceResources:
+  - {name: ProbsJSON, description: Bounded top-k single-label probabilities, properties: {valueType: String, readWrite: "R"}}
+  - {name: AttributesJSON, description: Bounded multi-label attributes and probabilities, properties: {valueType: String, readWrite: "R"}}
+  - {name: Top1Label, description: Highest-scoring label, properties: {valueType: String, readWrite: "R"}}
+  - {name: Top1Score, description: Highest score, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: FrameJPEG, description: Optional annotated evidence frame, properties: {valueType: Binary, readWrite: "R", mediaType: image/jpeg}}
+  - {name: InferLatencyMs, description: Last inference round-trip time in milliseconds, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: State, description: Pipeline state, properties: {valueType: String, readWrite: "R"}}
+  - {name: LastError, description: Most recent failure reason, properties: {valueType: String, readWrite: "R"}}
+  - {name: SuccessTotal, description: Cumulative successful inferences, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: ErrorTotal, description: Cumulative failed attempts, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: P50Ms, description: Median recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: P95Ms, description: P95 recent latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: Trigger, description: Write to invoke immediate inference, properties: {valueType: String, readWrite: "W"}}

@@ -1,0 +1,118 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+Writable:
+  LogLevel: INFO
+  # Initialize the map so camera/model credentials delivered through Keeper
+  # in non-secure deployments are merged into the SDK SecretProvider. Named
+  # secrets must never be committed to this repository.
+  InsecureSecrets: {}
+
+Service:
+  # Container deployments set SERVICE_HOST so core-command can call the
+  # service back by its network hostname.
+  Host: localhost
+  # Provisional port, pending EdgeX Foundry TSC assignment on contribution.
+  Port: 59992
+  StartupMsg: device-inference started
+
+MessageBus:
+  Optional:
+    ClientId: device-inference
+
+Device:
+  # Inference results are produced by continuously running jobs and are sent
+  # through the SDK async channel (not synchronous GET commands).
+  EnableAsyncReadings: true
+  AsyncBufferSize: 16
+  # These have common values (currently), but must be here for service local env overrides to apply when customized
+  ProfilesDir: "./res/profiles"
+  DevicesDir: "./res/devices"
+
+Inference:
+  DefaultEndpoint: "edgex-ovms:9000"
+  OpenAIEndpoint: "http://edgex-vllm:8000"
+  OpenAIAPISecret: ""
+  ModelRoot: "/var/lib/nereid-inference/models"
+  CoreMetadataURL: "http://edgex-core-metadata:59881"
+  CoreCommandURL: "http://edgex-core-command:59882"
+  Ess:
+    Enabled: true
+    LocalDir: "/var/horizon/ess-store/sync/local"
+  Inbox:
+    Enabled: true
+    Dir: "/var/lib/nereid-inference/inbox"
+  FFmpeg:
+    Bin: "ffmpeg"
+    ProbeBin: "ffprobe"
+    Global: "-hide_banner -loglevel warning"
+    ConnectTimeoutSec: 5
+    # Input options precede -i and are shared by ffmpeg and the ffprobe
+    # geometry probe, so every option must be accepted by both. low_delay
+    # disables decoder reorder buffering, max_delay caps demuxer jitter at
+    # 500ms, probesize/analyzeduration bound startup/reconnect probing.
+    # Avoid -fflags nobuffer (measured to throttle this camera's RTSP/TCP
+    # stream 25fps->~6fps) and -thread_queue_size (rejected by ffprobe).
+    InputTemplates:
+      rtsp: "-flags low_delay -max_delay 500000 -probesize 262144 -analyzeduration 1000000 -rtsp_transport tcp -timeout {timeout_us} -i {url}"
+      rtsp-udp: "-flags low_delay -max_delay 500000 -probesize 262144 -analyzeduration 1000000 -rtsp_transport udp -timeout {timeout_us} -i {url}"
+    OutputTemplate: "-an -f rawvideo -pix_fmt rgb24 pipe:1"
+    # AuthChallengeNormalize runs TCP RTSP sources through a loopback relay
+    # that collapses a camera's combined Basic+Digest 401 challenge to the
+    # single Basic challenge libavformat can answer. Set false for cameras
+    # that authenticate correctly with the default ffmpeg negotiation.
+    AuthChallengeNormalize: true
+    DropUID: 1000
+    DropGID: 1000
+    # Default DRM render node for jobs whose Inference.DecodeAccel is
+    # "vaapi"; a job can override it with Inference.VAAPIDevice to select a
+    # discrete card (e.g. renderD129). The /dev/dri tree MUST be mapped into
+    # the container (compose: devices; Kubernetes: Intel GPU device plugin
+    # resource gpu.intel.com/i915) and a VA driver must be installed in the
+    # image (intel-media-driver). The unprivileged ffmpeg child is granted
+    # the node's owning GID at runtime, so no container group_add is needed
+    # for the default root container. A missing node or driver fails the job
+    # loudly at startup; there is no silent software fallback.
+    VAAPIDevice: "/dev/dri/renderD128"
+  Onvif:
+    # NormalizeVirtualChannel rewrites the non-playable aggregate channel
+    # ".../Streaming/Channels/0" some firmware returns from GetStreamUri to
+    # the conventional main channel (MainChannel). Disable for conformant
+    # cameras; MainChannel must be a short path-safe token.
+    NormalizeVirtualChannel: true
+    MainChannel: "101"
+  Preview:
+    Enabled: true
+    Bind: "0.0.0.0:18080"
+  OVMS:
+    Enabled: true
+    RESTEndpoint: "http://edgex-ovms:9001"
+    ContainerRoot: "/models"
+    ReloadTimeoutSec: 5
+  # Managed Triton reconciler. Disabled until a Triton server container is
+  # part of the edge stack; enable to render runtime/triton/repo and drive
+  # explicit-model-control load/unload through the HTTP Repository API.
+  Triton:
+    Enabled: true
+    ControlEndpoint: "http://edgex-triton:8000"
+    GRPCEndpoint: "edgex-triton:8001"
+    ContainerRoot: "/models"
+    LoadTimeoutSec: 30
+    ReadyTimeoutSec: 60
+  # External servables are servers NI cannot administrate (centralized or
+  # customer-provided). The merged provisioned/legacy-runtime health view is
+  # read-only; managed PUT and ServableID execution are currently rejected.
+  External:
+    Enabled: true
+    ProvisionFile: "res/external-servables.yaml"
+  # NI-owned minimal linear pipeline registry. The platform ships no
+  # business pipeline, so provisioning is opt-in: leave ProvisionFile empty
+  # for a blank registry, or point it at deployment material copied from the
+  # repository samples (see samples/pipelines/). PipelinesJSON PUT remains
+  # the runtime B channel and persists a complete replacement under ModelRoot.
+  Pipelines:
+    ProvisionFile: ""
+  Limits:
+    MaxJobs: 64
+    FrameTTLFactor: 2.0
+    JSONPayloadCap: 1048576

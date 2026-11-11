@@ -1,0 +1,41 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+# Rolling dev channel (root treaty §19). Every push to main publishes the
+# 0.0.0-dev floating tag and an immutable 0.0.0-dev-<sha> tag to GHCR via the
+# organization reusable workflow. Pull requests deliberately do not trigger
+# this, so forks cannot publish into the organization namespace. Formal
+# releases remain tag-only through release.yml.
+name: Publish Dev Image
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: publish-dev-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prep:
+    name: Derive image build metadata
+    runs-on: ubuntu-latest
+    outputs:
+      build_date: ${{ steps.meta.outputs.build_date }}
+    steps:
+      - id: meta
+        run: echo "build_date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+
+  publish-dev-image:
+    name: Build and publish dev image
+    needs: prep
+    uses: NereidAI/.github/.github/workflows/publish-dev-image.yml@v1
+    with:
+      image-name: nereidinference
+      build-args: |
+        GIT_SHA=${{ github.sha }}
+        BUILD_DATE=${{ needs.prep.outputs.build_date }}

@@ -1,0 +1,31 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+name: nereid-inference-pipeline
+manufacturer: YIQISOFT
+model: InferencePipeline
+labels:
+  - nereid
+  - inference
+  - pipeline
+description: NI-native minimal linear pipeline job (PipelineId selection)
+deviceResources:
+  - name: PipelineJSON
+    description: Bounded nereid.pipeline/1 frame facts; source-frame boxes, five keypoints and embeddings, never raw images or tensors
+    properties:
+      valueType: String
+      readWrite: "R"
+  - {name: InferLatencyMs, description: Last complete pipeline latency in milliseconds, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: ActivePipelineVersion, description: Version of the graph committed by Executor.Resolve; empty before initial resolution, properties: {valueType: String, readWrite: "R"}}
+  - {name: LatestPipelineVersion, description: Newest accepted version returned by Registry.Lookup, independent of runtime readiness, properties: {valueType: String, readWrite: "R"}}
+  - {name: State, description: Pipeline state (APPLIED/DEGRADED/FAILED), properties: {valueType: String, readWrite: "R"}}
+  - {name: LastError, description: Most recent transport-safe failure reason, properties: {valueType: String, readWrite: "R"}}
+  - {name: SuccessTotal, description: Cumulative successful pipeline frames, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: ErrorTotal, description: Cumulative failed pipeline attempts, properties: {valueType: Int64, readWrite: "R"}}
+  - {name: P50Ms, description: Median recent complete pipeline latency, properties: {valueType: Float64, readWrite: "R"}}
+  - {name: P95Ms, description: 95th percentile recent complete pipeline latency, properties: {valueType: Float64, readWrite: "R"}}
+  - name: Trigger
+    description: Write to acquire one source image and invoke the same detect-align-embedding code used by continuous jobs
+    properties:
+      valueType: String
+      readWrite: "W"

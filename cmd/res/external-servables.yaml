@@ -1,0 +1,47 @@
+# Copyright (C) 2026 YIQISOFT
+# SPDX-License-Identifier: Apache-2.0
+
+# A-channel (provisioned) external servables. These are inference servers
+# device-inference cannot administrate: it probes them through OIP but never
+# sends load/unload. ExternalServablesJSON is a read-only merged health view;
+# managed runtime writes and ServableID execution are currently rejected.
+# Legacy persisted runtime records remain visible and override provisioned
+# entries with the same servableId. Leave the list empty until a centralized
+# or customer-provided server exists.
+servables: []
+# Example:
+# servables:
+#   - servableId: datacenter-face-embed
+#     family: external
+#     protocol: kserve-grpc
+#     endpoint: triton-dc-01:8001
+#     modelName: face_embedding
+#     modelVersion: "1"
+#     capabilities:
+#       devices:
+#         - GPU
+#       deviceSelectable: false
+#     descriptor:
+#       schema: nereid-model/1
+#       model:
+#         id: face-embedding
+#         version: "1.0.0"
+#         task: embedding
+#       runtime:
+#         backend: kserve
+#         model_name: face_embedding
+#         server:
+#           family: external
+#       io:
+#         inputs:
+#           - name: images
+#             shape: [1, 3, 112, 112]
+#             layout: NCHW
+#             dtype: FP32
+#         outputs:
+#           - name: embeddings
+#             shape: [1, 512]
+#             layout: NC
+#             dtype: FP32
+#       decoder:
+#         kind: embedding
