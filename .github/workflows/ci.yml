@@ -78,7 +78,7 @@ jobs:
       - name: Build and cache the OCI image archive
         # The action provides the GitHub runtime integration required by the
         # gha cache backend, which a plain shell buildx invocation does not.
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: Dockerfile
