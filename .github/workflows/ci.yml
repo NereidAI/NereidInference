@@ -101,7 +101,7 @@ jobs:
         run: ./bin/test-oci-image.sh "${{ steps.image.outputs.archive }}" linux/amd64,linux/arm64
 
       - name: Upload the multi-arch image
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nereidinference-${{ github.sha }}
           path: dist/*.oci.tar
