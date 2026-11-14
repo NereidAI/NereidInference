@@ -39,7 +39,7 @@ copyright and license notices in the corresponding source files are retained.
 
 Upstream Project Acknowledgment
 -------------------------------
-EdgeX Foundry (https://www.edgexfoundry.io/ and
+EdgeX Foundry (https://www.edgexfoundry.org/ and
 https://github.com/edgexfoundry) is an open-source project licensed under
 Apache-2.0. NereidInference is an EdgeX device service based on
 device-sdk-go. It is an independent work, not part of, or endorsed by, EdgeX
