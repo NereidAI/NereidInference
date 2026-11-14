@@ -2,6 +2,15 @@
 
 # device-inference
 
+[![CI](https://github.com/NereidAI/NereidInference/actions/workflows/ci.yml/badge.svg)](https://github.com/NereidAI/NereidInference/actions/workflows/ci.yml)
+[![Dev Image](https://github.com/NereidAI/NereidInference/actions/workflows/publish-dev.yml/badge.svg)](https://github.com/NereidAI/NereidInference/actions/workflows/publish-dev.yml)
+[![Release](https://github.com/NereidAI/NereidInference/actions/workflows/release.yml/badge.svg)](https://github.com/NereidAI/NereidInference/actions/workflows/release.yml)
+[![DCO](https://github.com/NereidAI/NereidInference/actions/workflows/dco.yml/badge.svg)](https://github.com/NereidAI/NereidInference/actions/workflows/dco.yml)
+[![License](https://img.shields.io/github/license/NereidAI/NereidInference)](LICENSE)
+[![Architectures](https://img.shields.io/badge/arch-amd64%20%7C%20arm64-627185?logo=linux&logoColor=white)](https://github.com/NereidAI/NereidInference/actions/workflows/release.yml)
+[![Go](https://img.shields.io/badge/go-1.27.3-00ADD8?logo=go&logoColor=white)](go.mod)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-fe519e?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org/)
+[![GHCR nereidinference](https://img.shields.io/badge/GHCR-nereidinference-2496ED?logo=docker&logoColor=white)](https://github.com/orgs/NereidAI/packages/container/package/nereidinference)
 [![EdgeX Foundry](https://img.shields.io/badge/EdgeX-4.0-blue.svg)](https://www.edgexfoundry.io/)
 
 EdgeX device service for generic, descriptor-driven media inference. One
