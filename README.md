@@ -11,7 +11,7 @@
 [![Go](https://img.shields.io/badge/go-1.27.3-00ADD8?logo=go&logoColor=white)](go.mod)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-fe519e?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org/)
 [![GHCR nereidinference](https://img.shields.io/badge/GHCR-nereidinference-2496ED?logo=docker&logoColor=white)](https://github.com/orgs/NereidAI/packages/container/package/nereidinference)
-[![EdgeX Foundry](https://img.shields.io/badge/EdgeX-4.0-blue.svg)](https://www.edgexfoundry.io/)
+[![EdgeX Foundry](https://img.shields.io/badge/EdgeX-4.0-blue.svg)](https://www.edgexfoundry.org/)
 
 EdgeX device service for generic, descriptor-driven media inference. One
 service instance per node runs any number of inference **jobs** (one per
@@ -251,7 +251,7 @@ third-party components retain their respective licenses.
 ## Acknowledgements
 
 NereidInference builds on contributions from the
-[EdgeX Foundry](https://www.edgexfoundry.io/) community. We thank EdgeX
+[EdgeX Foundry](https://www.edgexfoundry.org/) community. We thank EdgeX
 Foundry and all of its contributors for their work on the device-service
 ecosystem and [device-sdk-go](https://github.com/edgexfoundry/device-sdk-go).
 NereidInference is an independent work, not part of, or endorsed by, EdgeX
