@@ -451,9 +451,9 @@ Source: https://pkg.go.dev/github.com/edgexfoundry/go-mod-core-contracts/v4@v4.0
 
 ==============================================================================
 Module: github.com/fsnotify/fsnotify
-Version: v1.9.0
+Version: v1.10.1
 License: BSD-3-Clause
-Source: https://pkg.go.dev/github.com/fsnotify/fsnotify@v1.9.0
+Source: https://pkg.go.dev/github.com/fsnotify/fsnotify@v1.10.1
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 2dfbe6d2b5eb18b55148f3805d88648a09e0d17e38428123259afb08c8996e37) ---
@@ -486,14 +486,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ==============================================================================
 Module: golang.org/x/image
-Version: v0.0.0-20190802002840-cff245a6509b
+Version: v0.48.0
 License: BSD-3-Clause
-Source: https://pkg.go.dev/golang.org/x/image@v0.0.0-20190802002840-cff245a6509b
+Source: https://pkg.go.dev/golang.org/x/image@v0.48.0
 ==============================================================================
 
---- Upstream file: LICENSE (original SHA-256: 2d36597f7117c38b006835ae7f537487207d8ec407aa9d9980794b2030cbc067) ---
+--- Upstream file: LICENSE (original SHA-256: 911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad) ---
 
-Copyright (c) 2009 The Go Authors. All rights reserved.
+Copyright 2009 The Go Authors.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -505,7 +505,7 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
+   * Neither the name of Google LLC nor the names of its
 contributors may be used to endorse or promote products derived from
 this software without specific prior written permission.
 
@@ -548,9 +548,9 @@ shall terminate as of the date such litigation is filed.
 
 ==============================================================================
 Module: google.golang.org/grpc
-Version: v1.79.3
+Version: v1.85.0
 License: Apache-2.0
-Source: https://pkg.go.dev/google.golang.org/grpc@v1.79.3
+Source: https://pkg.go.dev/google.golang.org/grpc@v1.85.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30) ---
@@ -776,9 +776,9 @@ limitations under the License.
 
 ==============================================================================
 Module: google.golang.org/protobuf
-Version: v1.36.11
+Version: v1.36.12
 License: BSD-3-Clause
-Source: https://pkg.go.dev/google.golang.org/protobuf@v1.36.11
+Source: https://pkg.go.dev/google.golang.org/protobuf@v1.36.12
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 4835612df0098ca95f8e7d9e3bffcb02358d435dbb38057c844c99d7f725eb20) ---
@@ -3356,9 +3356,9 @@ SOFTWARE.
 
 ==============================================================================
 Module: github.com/go-logr/logr
-Version: v1.4.3
+Version: v1.4.4
 License: Apache-2.0
-Source: https://pkg.go.dev/github.com/go-logr/logr@v1.4.3
+Source: https://pkg.go.dev/github.com/go-logr/logr@v1.4.4
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1) ---
@@ -13466,9 +13466,9 @@ SOFTWARE.
 
 ==============================================================================
 Module: github.com/spiffe/go-spiffe/v2
-Version: v2.6.0
+Version: v2.8.1
 License: Apache-2.0
-Source: https://pkg.go.dev/github.com/spiffe/go-spiffe/v2@v2.6.0
+Source: https://pkg.go.dev/github.com/spiffe/go-spiffe/v2@v2.8.1
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4) ---
@@ -14760,9 +14760,9 @@ Source: https://pkg.go.dev/go.opentelemetry.io/auto/sdk@v1.2.1
 
 ==============================================================================
 Module: go.opentelemetry.io/otel
-Version: v1.41.0
+Version: v1.45.0
 License: Apache-2.0 AND BSD-3-Clause
-Source: https://pkg.go.dev/go.opentelemetry.io/otel@v1.41.0
+Source: https://pkg.go.dev/go.opentelemetry.io/otel@v1.45.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 1ae07514be1d7bb33f0698f8d91fb51b8b9fe1463157ec1c72081a49b9bc6f40) ---
@@ -15001,9 +15001,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ==============================================================================
 Module: go.opentelemetry.io/otel/metric
-Version: v1.41.0
+Version: v1.45.0
 License: Apache-2.0 AND BSD-3-Clause
-Source: https://pkg.go.dev/go.opentelemetry.io/otel/metric@v1.41.0
+Source: https://pkg.go.dev/go.opentelemetry.io/otel/metric@v1.45.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 1ae07514be1d7bb33f0698f8d91fb51b8b9fe1463157ec1c72081a49b9bc6f40) ---
@@ -15242,9 +15242,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ==============================================================================
 Module: go.opentelemetry.io/otel/trace
-Version: v1.41.0
+Version: v1.45.0
 License: Apache-2.0 AND BSD-3-Clause
-Source: https://pkg.go.dev/go.opentelemetry.io/otel/trace@v1.41.0
+Source: https://pkg.go.dev/go.opentelemetry.io/otel/trace@v1.45.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 1ae07514be1d7bb33f0698f8d91fb51b8b9fe1463157ec1c72081a49b9bc6f40) ---
@@ -15559,9 +15559,9 @@ limitations under the License.
 
 ==============================================================================
 Module: golang.org/x/crypto
-Version: v0.51.0
+Version: v0.57.0
 License: BSD-3-Clause
-Source: https://pkg.go.dev/golang.org/x/crypto@v0.51.0
+Source: https://pkg.go.dev/golang.org/x/crypto@v0.57.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad) ---
@@ -15621,9 +15621,9 @@ shall terminate as of the date such litigation is filed.
 
 ==============================================================================
 Module: golang.org/x/net
-Version: v0.55.0
+Version: v0.60.0
 License: BSD-3-Clause
-Source: https://pkg.go.dev/golang.org/x/net@v0.55.0
+Source: https://pkg.go.dev/golang.org/x/net@v0.60.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad) ---
@@ -15720,9 +15720,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ==============================================================================
 Module: golang.org/x/sync
-Version: v0.20.0
+Version: v0.25.0
 License: BSD-3-Clause
-Source: https://pkg.go.dev/golang.org/x/sync@v0.20.0
+Source: https://pkg.go.dev/golang.org/x/sync@v0.25.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad) ---
@@ -15782,9 +15782,9 @@ shall terminate as of the date such litigation is filed.
 
 ==============================================================================
 Module: golang.org/x/sys
-Version: v0.45.0
+Version: v0.50.0
 License: BSD-3-Clause
-Source: https://pkg.go.dev/golang.org/x/sys@v0.45.0
+Source: https://pkg.go.dev/golang.org/x/sys@v0.50.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad) ---
@@ -15844,9 +15844,9 @@ shall terminate as of the date such litigation is filed.
 
 ==============================================================================
 Module: golang.org/x/term
-Version: v0.43.0
+Version: v0.46.0
 License: BSD-3-Clause
-Source: https://pkg.go.dev/golang.org/x/term@v0.43.0
+Source: https://pkg.go.dev/golang.org/x/term@v0.46.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad) ---
@@ -15906,9 +15906,9 @@ shall terminate as of the date such litigation is filed.
 
 ==============================================================================
 Module: golang.org/x/text
-Version: v0.37.0
+Version: v0.44.0
 License: BSD-3-Clause
-Source: https://pkg.go.dev/golang.org/x/text@v0.37.0
+Source: https://pkg.go.dev/golang.org/x/text@v0.44.0
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: 911f8f5782931320f5b8d1160a76365b83aea6447ee6c04fa6d5591467db9dad) ---
@@ -15968,9 +15968,9 @@ shall terminate as of the date such litigation is filed.
 
 ==============================================================================
 Module: google.golang.org/genproto/googleapis/rpc
-Version: v0.0.0-20251202230838-ff82c1b0f217
+Version: v0.0.0-20260817212433-ac3dfec99bb1
 License: Apache-2.0
-Source: https://pkg.go.dev/google.golang.org/genproto/googleapis/rpc@v0.0.0-20251202230838-ff82c1b0f217
+Source: https://pkg.go.dev/google.golang.org/genproto/googleapis/rpc@v0.0.0-20260817212433-ac3dfec99bb1
 ==============================================================================
 
 --- Upstream file: LICENSE (original SHA-256: cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30) ---
